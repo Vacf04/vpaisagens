@@ -1,0 +1,14 @@
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding-bottom: 2rem;
+  padding-top: 2rem;
+}
+
+.linkWithIcon {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

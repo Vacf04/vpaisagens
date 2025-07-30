@@ -1,0 +1,36 @@
+.header {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.header nav ul {
+  display: flex;
+  gap: 1rem;
+}
+
+.header li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.1rem solid var(--color-accent);
+  border-radius: var(--border-radius);
+  color: var(--color-accent);
+  transition: var(--transition);
+}
+
+.header li:hover,
+.header .active {
+  border-color: var(--color-accent-hover);
+  color: var(--color-accent-hover);
+}
+
+.header li:last-child {
+  padding: 0.5rem;
+}
+
+.header li a {
+  width: 100%;
+  height: 100%;
+  padding: 0.5rem;
+}
