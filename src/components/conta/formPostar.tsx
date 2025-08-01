@@ -20,17 +20,16 @@ export default function FormPostar() {
     const fileName = `${Math.random()}.${fileExt}`;
     const filePath = `${fileName}`;
 
-    try {
-      const { data: dataImage, error: errorImage } =
-        await supabaseClient.storage.from("imagens").upload(filePath, image, {
-          cacheControl: "3600",
-          upsert: false,
-        });
+    const { data: dataImage, error: errorImage } = await supabaseClient.storage
+      .from("imagens")
+      .upload(filePath, image, {
+        cacheControl: "3600",
+        upsert: false,
+      });
 
-      if (!dataImage) {
-        return null;
-      }
-    } catch (error: unknown) {}
+    if (!dataImage) {
+      return null;
+    }
 
     const { data, error } = await supabaseClient
       .from("posts")
@@ -77,6 +76,8 @@ export default function FormPostar() {
           <Image
             src={previewImageUrl}
             alt="Pré-visualização da imagem selecionada"
+            width={200}
+            height={200}
           />
         </div>
       )}
