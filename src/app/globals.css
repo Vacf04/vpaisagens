@@ -71,3 +71,11 @@ a {
 .AppBody {
   flex: 1;
 }
+
+.errorMessage {
+  color: var(--color-error);
+}
+
+.successMessage {
+  color: var(--color-success);
+}

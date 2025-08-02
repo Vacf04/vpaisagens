@@ -1,62 +1,94 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/context/authContext";
 import Image from "next/image";
+import photoPost from "@/actions/photo-post";
+
 export default function FormPostar() {
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState<File | null>();
+  const [image, setImage] = useState<File | null>(null);
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
-  const { supabaseClient, user } = useAuth();
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+
+  function resetForm() {
+    setDescription("");
+    setImage(null);
+    if (previewImageUrl) {
+      URL.revokeObjectURL(previewImageUrl);
+    }
+    setPreviewImageUrl(null);
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setLoading(true);
 
-    if (!image) {
-      alert("Por favor, selecione uma imagem.");
+    if (!image || !description || !description.trim()) {
+      setError("Por favor, Preencha todos os campos");
+      setLoading(false);
       return;
     }
 
-    const fileExt = image.name.split(".").pop();
-    const fileName = `${Math.random()}.${fileExt}`;
-    const filePath = `${fileName}`;
-
-    const { data: dataImage, error: errorImage } = await supabaseClient.storage
-      .from("imagens")
-      .upload(filePath, image, {
-        cacheControl: "3600",
-        upsert: false,
-      });
-
-    if (!dataImage) {
-      return null;
+    if (image && !image.type.startsWith("image/")) {
+      setError("Por favor, selecione uma imagem válida.");
+      return;
     }
 
-    const { data, error } = await supabaseClient
-      .from("posts")
-      .insert([
-        {
-          user_id: user?.id,
-          image_url: `https://bbakykgrrgwpnfukhkad.supabase.co/storage/v1/object/public/imagens/${dataImage.path}`,
-          description: description,
-        },
-      ])
-      .select();
+    if (!user) {
+      setError("Você precisa estar logado para postar.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { error } = await photoPost(user.id, image, description);
+
+      if (error) {
+        throw new Error(error.message || "Ocorreu um erro desconhecido.");
+      }
+
+      setSuccess("Post enviado com sucesso!");
+      resetForm();
+    } catch (error: unknown) {
+      if (error instanceof Error) setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   function handleImagePreview(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files !== null) {
-      const imageUrl = URL.createObjectURL(e.target.files[0]);
-      setPreviewImageUrl(imageUrl);
-      setImage(e.target.files[0]);
+      if (previewImageUrl) {
+        URL.revokeObjectURL(previewImageUrl);
+      }
+      const file = e.target.files[0];
+      if (file) {
+        const imageUrl = URL.createObjectURL(file);
+        setPreviewImageUrl(imageUrl);
+        setImage(file);
+      } else {
+        setPreviewImageUrl(null);
+        setImage(null);
+      }
     }
   }
+
+  useEffect(() => {
+    return () => {
+      if (previewImageUrl) {
+        URL.revokeObjectURL(previewImageUrl);
+      }
+    };
+  }, [previewImageUrl]);
 
   return (
     <>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          accept="image/*"
           name="description"
           id="description"
           value={description}
@@ -64,11 +96,16 @@ export default function FormPostar() {
         />
         <input
           type="file"
+          accept="image/*"
           name="image"
           id="image"
           onChange={handleImagePreview}
         />
-        <button type="submit">Enviar</button>
+        {error && <p className="errorMessage">{error}</p>}
+        {success && <p className="successMessage">{success}</p>}
+        <button type="submit" disabled={loading}>
+          Enviar
+        </button>
       </form>
       {previewImageUrl && (
         <div>
