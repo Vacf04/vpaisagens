@@ -13,13 +13,19 @@ export type Posts = {
     created_at: string;
 };
 
-export default async function postsGet(id: string): Promise<{ data: Posts[] | null; error: PostgrestError | null }> {
+type RangeValues = {
+    firstRange: number;
+    lastRange: number;
+}
+
+export default async function postsGet(id: string, range: RangeValues): Promise<{ data: Posts[] | null; error: PostgrestError | null }> {
     const supabaseServer = await createClient();
     
     const { data, error } = await supabaseServer
         .from('posts')
         .select('*')
-        .eq('user_id', id);
+        .eq('user_id', id)
+        .range(range.firstRange, range.lastRange);
 
     return { data, error };
 }
