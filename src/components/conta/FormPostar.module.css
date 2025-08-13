@@ -1,0 +1,63 @@
+.descriptionInput {
+  resize: none;
+  height: 10rem;
+  width: 18rem;
+  border-radius: var(--border-radius);
+  padding: 0.5rem 1rem;
+  border: 0.1rem solid transparent;
+  color: var(--color-background-primary);
+  transition: var(--transition);
+  background-color: var(--color-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.descriptionInput:focus,
+.descriptionInput:hover {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 5px var(--color-accent);
+}
+
+.label {
+  display: block;
+}
+
+.inputImage {
+  display: none;
+}
+
+.labelImage {
+  border: solid 0.1rem var(--color-accent);
+  background-color: transparent;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 0.05rem;
+  color: var(--color-accent);
+  cursor: pointer;
+  transition: var(--transition);
+  width: max-content;
+  margin-bottom: 0.5rem;
+  width: 18rem;
+  justify-content: center;
+}
+
+.labelImage:focus,
+.labelImage:hover {
+  outline: none;
+  background-color: var(--color-accent);
+  color: var(--color-background-primary);
+}
+
+.postarContent {
+  display: flex;
+  gap: 2rem;
+}
+
+.previewImg {
+  border-radius: var(--border-radius);
+}

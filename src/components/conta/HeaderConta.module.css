@@ -2,6 +2,7 @@
   display: flex;
   gap: 1rem;
   justify-content: space-between;
+  margin-bottom: 1rem;
 }
 
 .header nav ul {
@@ -21,8 +22,8 @@
 
 .header li:hover,
 .header .active {
-  border-color: var(--color-accent-hover);
-  color: var(--color-accent-hover);
+  background-color: var(--color-accent);
+  color: var(--color-background-primary);
 }
 
 .header li:last-child {

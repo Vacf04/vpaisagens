@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/context/authContext";
 import Image from "next/image";
 import photoPost from "@/actions/photo-post";
+import styles from "./FormPostar.module.css";
+import { FaRegImage } from "react-icons/fa";
+import Button from "../forms/Button";
 
 export default function FormPostar() {
   const [description, setDescription] = useState("");
@@ -85,12 +88,17 @@ export default function FormPostar() {
   }, [previewImageUrl]);
 
   return (
-    <>
+    <div className={styles.postarContent}>
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
+        <label htmlFor="image" className={styles.labelImage}>
+          <FaRegImage />
+          Envie sua Imagem
+        </label>
+        <textarea
+          placeholder="Escreva sua descrição..."
           name="description"
           id="description"
+          className={styles.descriptionInput}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
@@ -99,25 +107,34 @@ export default function FormPostar() {
           accept="image/*"
           name="image"
           id="image"
+          className={styles.inputImage}
           onChange={handleImagePreview}
         />
+        <Button
+          type="submit"
+          disabled={loading}
+          style={{
+            width: "100%",
+            justifyContent: "center",
+            marginBottom: ".5rem",
+          }}
+        >
+          Postar
+        </Button>
         {error && <p className="errorMessage">{error}</p>}
         {success && <p className="successMessage">{success}</p>}
-        <button type="submit" disabled={loading}>
-          Enviar
-        </button>
       </form>
       {previewImageUrl && (
         <div>
-          <h2>Pré-visualização:</h2>
           <Image
             src={previewImageUrl}
             alt="Pré-visualização da imagem selecionada"
-            width={200}
-            height={200}
+            className={styles.previewImg}
+            width={255}
+            height={255}
           />
         </div>
       )}
-    </>
+    </div>
   );
 }

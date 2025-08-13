@@ -16,7 +16,7 @@ function getTitle(pathname: string) {
 
 export default function HeaderConta() {
   const router = useRouter();
-  const { supabaseClient, user } = useAuth();
+  const { supabaseClient } = useAuth();
   const pathname = usePathname();
 
   async function handleLogout() {
@@ -25,7 +25,6 @@ export default function HeaderConta() {
     if (error) {
       console.error("Erro ao fazer logout:", error);
     } else {
-      console.log("Usuário deslogado com sucesso!");
       router.push("/login");
     }
   }

@@ -1,25 +1,12 @@
 :root {
-  /* Base Colors */
-  --color-background-primary: #0a0a0a; /* Very dark black */
-  --color-background-secondary: #1a237e; /* Deep Navy Blue */
-  --color-background-card: #1a237e; /* Can be same as secondary or slightly different */
+  --color-background-primary: #121212;
 
-  /* Text Colors */
-  --color-text-primary: #e0e0e0; /* Light Gray */
-  --color-text-secondary: #95a5a6; /* Slightly darker gray for details */
-  --color-text-highlight: #64b5f6; /* Starry Sky Blue for links/titles */
+  --color-text-primary: #e0e0e0;
 
-  /* Accent / Action Colors */
-  --color-accent: #8854d0; /* Amethyst Purple for buttons, active icons */
-  --color-accent-hover: #b384c8; /* Lighter purple for hover states */
-  --color-border-elements: #2f3640; /* Charcoal Gray for subtle borders */
-  --color-icon: #64b5f6; /* Blue for standard icons */
-  --color-success: #27ae60; /* Green for success messages */
-  --color-error: #e74c3c; /* Red for error messages */
-
-  /* Opacity Colors (for overlays, etc.) */
-  --color-overlay-dark: rgba(0, 0, 0, 0.7);
-  --color-overlay-bluish: rgba(26, 35, 126, 0.5);
+  --color-accent: #ffcc00;
+  --color-accent-hover: #c9a100;
+  --color-success: #27ae60;
+  --color-error: #e74c3c;
 
   --border-radius: 0.5rem;
   --box-shadow-card: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -58,6 +45,7 @@ a {
 
 .container {
   max-width: 1000px;
+  padding: 0 1rem;
   margin: 0 auto;
 }
 

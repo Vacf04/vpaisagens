@@ -5,7 +5,6 @@ import type { NextRequest } from 'next/server';
 import type { Database } from '@/lib/database.types';
 
 export async function middleware(req: NextRequest) {
-  console.log('\n--- Middleware START ---');
   const res = NextResponse.next();
 
   const supabase = createServerClient<Database>(
@@ -29,12 +28,6 @@ export async function middleware(req: NextRequest) {
   );
 
   const { data: { user } } = await supabase.auth.getUser();
-  console.log('Current Path:', req.nextUrl.pathname);
-  console.log('Session exists:', !!user);
-  if (user) {
-    console.log('Session user ID:', user.id);
-    console.log('Session email confirmed:', user.email_confirmed_at ? 'Yes' : 'No');
-  }
 
   const profileSetupPath = '/login/registrar/criar-perfil';
   const protectedPaths = ['/conta'];
@@ -42,21 +35,17 @@ export async function middleware(req: NextRequest) {
   const currentPath = req.nextUrl.pathname;
 
   if (!user) {
-    console.log('State: NOT AUTHENTICATED');
     if (protectedPaths.includes(currentPath) || currentPath === profileSetupPath) {
-      console.log('Action: Redirecting to /login (not authenticated).');
       const redirectUrl = new URL('/login', req.url);
       return NextResponse.redirect(redirectUrl);
     }
-    console.log('Action: Allowing access to public path.');
     return res;
   }
 
-  console.log('State: AUTHENTICATED');
 
   let hasProfile = false;
   try {
-    const { data: profile, error } = await supabase
+    const { data: profile } = await supabase
       .from('profiles')
       .select('id')
       .eq('id', user.id)
@@ -65,28 +54,19 @@ export async function middleware(req: NextRequest) {
     if (profile) {
       hasProfile = true;
     }
-    if (error && error.code !== 'PGRST116') {
-      console.error('Middleware RLS error or DB query error checking profile:', error);
-    }
   } catch (err) {
     console.error('Middleware network error checking profile:', err);
   }
-  console.log('Has Profile:', hasProfile);
 
   if (!hasProfile) {
-    console.log('State: AUTHENTICATED, NO PROFILE');
     if (currentPath !== profileSetupPath) {
-      console.log('Action: Redirecting to ' + profileSetupPath + ' (missing profile, from any path).');
       const redirectUrl = new URL(profileSetupPath, req.url);
       return NextResponse.redirect(redirectUrl);
     }
-    console.log('Action: Allowing access to profile setup page (user has no profile).');
     return res;
   }
   else {
-    console.log('State: AUTHENTICATED, HAS PROFILE');
     if (currentPath === profileSetupPath) {
-      console.log('Action: Redirecting from setup to /conta (profile complete).');
       const redirectUrl = new URL('/conta', req.url);
       return NextResponse.redirect(redirectUrl);
     }
@@ -96,7 +76,6 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(redirectUrl);
     }
 
-    console.log('Action: Allowing access to protected path (profile complete).');
     return res;
   }
 }

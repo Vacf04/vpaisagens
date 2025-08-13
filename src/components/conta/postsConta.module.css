@@ -6,7 +6,7 @@
 }
 
 .containerImagePost {
-  position: relative; /* Isso cria um contexto de posicionamento para os elementos filhos */
+  position: relative;
   width: 300px;
   height: 400px;
 }
