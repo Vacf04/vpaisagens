@@ -5,12 +5,14 @@ import { useAuth } from "@/context/authContext";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import styles from "./postsConta.module.css";
+import Link from "next/link";
 
 export default function PostsConta() {
   const { supabaseClient, user } = useAuth();
   const [posts, setPosts] = useState<Posts[] | null>();
   const [loading, setLoading] = useState<boolean>(true);
   const [infiniteScroll, setInfiniteScroll] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const final = useRef(null);
   const [range, setRange] = useState({
     firstRange: 0,
@@ -22,12 +24,17 @@ export default function PostsConta() {
       setLoading(true);
       if (user) {
         const { data, error } = await postsGet(user.id, range);
-        if (error) console.log(error);
+        if (error) setErrorMessage(error.message);
         if (data) {
           if (data?.length < 6) setInfiniteScroll(false);
           setPosts((postsAtuais) => {
             const posts = postsAtuais || [];
-            return [...posts, ...data];
+            const newPosts = data.filter((novoPost) => {
+              return !posts.some(
+                (existingPost) => existingPost.id === novoPost.id
+              );
+            });
+            return [...posts, ...newPosts];
           });
         }
         setLoading(false);
@@ -58,21 +65,28 @@ export default function PostsConta() {
       if (currentFinalRef) observer.unobserve(currentFinalRef);
     };
   }, [loading, infiniteScroll]);
+
+  if (errorMessage) return <p className="errorMessage">{errorMessage}</p>;
   return (
     <>
-      <div className={styles.gridPosts}>
+      <ul className={styles.gridPosts}>
         {posts &&
           posts.map((post) => (
-            <div key={post.id} className={styles.containerImagePost}>
-              <Image
-                src={post.image_url}
-                alt="teste"
-                width={400}
-                height={400}
-              />
-            </div>
+            <li key={post.id} className={styles.postListItem}>
+              <Link href={`/post/${post.id}`}>
+                <article className={styles.containerImagePost}>
+                  <Image
+                    src={post.image_url}
+                    alt="teste"
+                    width={400}
+                    height={400}
+                  />
+                  <span className={styles.overlayImage}></span>
+                </article>
+              </Link>
+            </li>
           ))}
-      </div>
+      </ul>
       {infiniteScroll ? (
         <div ref={final}>{loading && <div>Carregando mais posts...</div>}</div>
       ) : (
