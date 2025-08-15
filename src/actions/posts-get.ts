@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabaseServer";
 import { PostgrestError } from "@supabase/supabase-js";
 
 
-export type Posts = {
+export type PostsType = {
     id: string;
     user_id: string;
     image_url: string;
@@ -18,9 +18,17 @@ type RangeValues = {
     lastRange: number;
 }
 
-export default async function postsGet(id: string, range: RangeValues): Promise<{ data: Posts[] | null; error: PostgrestError | null }> {
+export default async function postsGet(id:string | null, range: RangeValues): Promise<{ data: PostsType[] | null; error: PostgrestError | null }> {
     const supabaseServer = await createClient();
     
+    if(!id) {
+        const { data, error } = await supabaseServer
+        .from('posts')
+        .select('*')
+        .range(range.firstRange, range.lastRange);
+
+    return { data, error };
+    }
     const { data, error } = await supabaseServer
         .from('posts')
         .select('*')
