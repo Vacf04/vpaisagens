@@ -1,16 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "../../context/authContext"; // Seu caminho correto
-import { useRouter } from "next/navigation";
+import { useAuth } from "../../context/authContext";
+import Input from "../forms/Input";
+import Button from "../forms/Button";
 
 export default function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const router = useRouter();
-  const { supabaseClient, user } = useAuth();
+  const { supabaseClient } = useAuth();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,31 +38,10 @@ export default function RegisterForm() {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "80vh",
-        padding: "20px",
-      }}
-    >
-      <h2>Registrar Nova Conta</h2>
-      <form
-        onSubmit={handleRegister}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "15px",
-          padding: "20px",
-          border: "1px solid #ddd",
-          borderRadius: "8px",
-          width: "300px",
-        }}
-      >
+    <div>
+      <form onSubmit={handleRegister}>
         <label htmlFor="email">E-mail:</label>
-        <input
+        <Input
           type="email"
           id="email"
           value={email}
@@ -71,7 +50,7 @@ export default function RegisterForm() {
           disabled={isSubmitting}
         />
         <label htmlFor="password">Senha:</label>
-        <input
+        <Input
           type="password"
           id="password"
           value={password}
@@ -79,9 +58,9 @@ export default function RegisterForm() {
           required
           disabled={isSubmitting}
         />
-        <button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Registrando..." : "Registrar"}
-        </button>
+        </Button>
         {message && (
           <p
             style={{
