@@ -1,15 +1,16 @@
 "use client";
 
-import postsGet, { Posts } from "@/actions/posts-get";
+import postsGet, { PostsType } from "@/actions/posts-get";
 import { useAuth } from "@/context/authContext";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import styles from "./postsConta.module.css";
+import styles from "./Posts.module.css";
 import Link from "next/link";
+import Loading from "../helper/Loading";
 
-export default function PostsConta() {
+export default function Posts({ isHome }: { isHome: boolean }) {
   const { supabaseClient, user } = useAuth();
-  const [posts, setPosts] = useState<Posts[] | null>();
+  const [posts, setPosts] = useState<PostsType[] | null>();
   const [loading, setLoading] = useState<boolean>(true);
   const [infiniteScroll, setInfiniteScroll] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -23,7 +24,8 @@ export default function PostsConta() {
     async function getPosts() {
       setLoading(true);
       if (user) {
-        const { data, error } = await postsGet(user.id, range);
+        const userIdParameter = isHome ? null : user.id; //parameter to know if is on home or on a page of user
+        const { data, error } = await postsGet(userIdParameter, range);
         if (error) setErrorMessage(error.message);
         if (data) {
           if (data?.length < 6) setInfiniteScroll(false);
@@ -42,7 +44,7 @@ export default function PostsConta() {
     }
 
     getPosts();
-  }, [supabaseClient, user, range]);
+  }, [supabaseClient, user, range, isHome]);
 
   useEffect(() => {
     if (!infiniteScroll) return;
@@ -88,9 +90,11 @@ export default function PostsConta() {
           ))}
       </ul>
       {infiniteScroll ? (
-        <div ref={final}>{loading && <div>Carregando mais posts...</div>}</div>
+        <div ref={final}>{loading && <Loading />}</div>
       ) : (
-        <div>Não Existem mais posts.</div>
+        <div style={{ textAlign: "center", marginTop: "1rem" }}>
+          Não Existem mais posts.
+        </div>
       )}
     </>
   );
