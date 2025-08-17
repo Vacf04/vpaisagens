@@ -1,0 +1,54 @@
+.registerContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.registerContent h1 {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+}
+
+.registerContent label {
+  font-size: 1.5rem;
+  font-weight: medium;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.registerContent input {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.registerContent button {
+  width: 100%;
+  justify-content: center;
+}
+
+.alreadyCreated {
+  margin-top: 2rem;
+}
+
+.alreadyCreated p {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.alreadyCreated a {
+  color: var(--color-accent-hover);
+  text-decoration: underline;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+@media (max-width: 700px) {
+  .registerContent {
+    grid-template-columns: 1fr;
+  }
+
+  .registerContent img {
+    justify-self: center;
+  }
+}
