@@ -1,0 +1,38 @@
+.inputImage {
+  display: none;
+}
+
+.labelImage {
+  border: solid 0.1rem var(--color-accent);
+  background-color: transparent;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  color: var(--color-accent);
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 0.5rem;
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.labelImage svg {
+  position: absolute;
+  width: 10rem !important;
+  height: 10rem !important;
+}
+
+.labelImage img {
+  position: absolute;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 1;
+}

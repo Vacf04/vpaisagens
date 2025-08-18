@@ -23,24 +23,22 @@ export default function Posts({ isHome }: { isHome: boolean }) {
   useEffect(() => {
     async function getPosts() {
       setLoading(true);
-      if (user) {
-        const userIdParameter = isHome ? null : user.id; //parameter to know if is on home or on a page of user
-        const { data, error } = await postsGet(userIdParameter, range);
-        if (error) setErrorMessage(error.message);
-        if (data) {
-          if (data?.length < 6) setInfiniteScroll(false);
-          setPosts((postsAtuais) => {
-            const posts = postsAtuais || [];
-            const newPosts = data.filter((novoPost) => {
-              return !posts.some(
-                (existingPost) => existingPost.id === novoPost.id
-              );
-            });
-            return [...posts, ...newPosts];
+      const userIdParameter = isHome ? null : user ? user?.id : null; //parameter to know if is on home or on a page of user
+      const { data, error } = await postsGet(userIdParameter, range);
+      if (error) setErrorMessage(error.message);
+      if (data) {
+        if (data?.length < 6) setInfiniteScroll(false);
+        setPosts((postsAtuais) => {
+          const posts = postsAtuais || [];
+          const newPosts = data.filter((novoPost) => {
+            return !posts.some(
+              (existingPost) => existingPost.id === novoPost.id
+            );
           });
-        }
-        setLoading(false);
+          return [...posts, ...newPosts];
+        });
       }
+      setLoading(false);
     }
 
     getPosts();
