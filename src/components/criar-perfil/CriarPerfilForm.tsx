@@ -42,33 +42,54 @@ export default function CriarPerfilForm() {
       setIsSubmitting(false);
       return;
     }
-    if (user)
-      try {
-        const { data, error } = await userCreate(user.id, username, avatar);
-        if (error) {
-          throw new Error(error.message || "Ocorreu um erro desconhecido.");
-        }
+    if (!user) {
+      setMessage({
+        message: "Usuário não autenticado.",
+        type: "error",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+    try {
+      const { data, error } = await userCreate(user.id, username, avatar);
+      if (error) {
+        throw new Error(error.message || "Ocorreu um erro desconhecido.");
+      }
 
-        console.log(data, error);
-
-        if (data) {
+      if (data) {
+        setMessage({
+          message: "Perfil criado com sucesso, Vamos te redirecionar",
+          type: "success",
+        });
+        setTimeout(() => {
+          redirect("/conta");
+        }, 1500);
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        if (
+          error.message ===
+          'duplicate key value violates unique constraint "profiles_username_key"'
+        ) {
           setMessage({
-            message: "Perfil criado com sucesso, Vamos te redirecionar",
-            type: "success",
+            message: "Nome de usuário já criado, tente outro!",
+            type: "error",
           });
-          setTimeout(() => {
-            redirect("/conta");
-          }, 1500);
-        }
-      } catch (error: unknown) {
-        if (error instanceof Error)
+        } else {
           setMessage({
             message: error.message,
             type: "error",
           });
-      } finally {
-        setIsSubmitting(false);
+        }
+      } else {
+        setMessage({
+          message: "Erro desconhecido",
+          type: "error",
+        });
       }
+    } finally {
+      setIsSubmitting(false);
+    }
 
     setIsSubmitting(false);
   };
@@ -91,19 +112,20 @@ export default function CriarPerfilForm() {
   }
 
   return (
-    <form onSubmit={handleProfileSubmit}>
+    <form onSubmit={handleProfileSubmit} className={styles.form}>
       <h1>Crie seu Perfil:</h1>
-      <label htmlFor="username">Username:</label>
       <Input
         type="text"
         id="username"
         name="username"
+        placeholder="Digite seu username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         required
         disabled={isSubmitting}
       />
       <label htmlFor="image" className={styles.labelImage}>
+        <FaRegImage className={styles.sendImage} />
         {previewImageUrl ? (
           <Image src={previewImageUrl} width={500} height={500} alt="User" />
         ) : (
@@ -118,6 +140,11 @@ export default function CriarPerfilForm() {
         className={styles.inputImage}
         onChange={handleImagePreview}
       />
+      {message && message.type === "error" ? (
+        <p className="errorMessage">{message.message}</p>
+      ) : (
+        message && <p className="successMessage">{message?.message}</p>
+      )}
       <Button>{isSubmitting ? "Criando..." : "Criar"}</Button>
     </form>
   );

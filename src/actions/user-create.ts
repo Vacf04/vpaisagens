@@ -39,6 +39,10 @@ export default async function userCreate(id: string, username: string, avatar: F
       ])
       .select();
 
+      if(errorPost) {
+       await supabaseServer.storage.from("imagens").remove([filePath])
+      }
+
       data = dataPost;
       error = errorPost;
 
