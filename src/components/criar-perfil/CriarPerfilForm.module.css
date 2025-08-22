@@ -1,0 +1,86 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form button {
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.form h1 {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+}
+
+.form label {
+  font-size: 1.5rem;
+}
+
+.inputImage {
+  display: none;
+}
+
+.labelImage {
+  border: solid 0.1rem var(--color-accent);
+  background-color: transparent;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  color: var(--color-accent);
+  cursor: pointer;
+  transition: var(--transition);
+  margin-bottom: 0.5rem;
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  transition: var(--transition);
+}
+
+.labelImage svg {
+  position: absolute;
+  transition: var(--transition);
+  width: 10rem;
+  height: 10rem;
+}
+
+.labelImage img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 1;
+  transition: var(--transition);
+}
+
+.sendImage {
+  position: absolute;
+  width: 4rem !important;
+  height: 4rem !important;
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.labelImage:hover {
+  background-color: black;
+}
+
+.labelImage:hover svg {
+  opacity: 0.5;
+}
+
+.labelImage:hover img {
+  opacity: 0.5;
+}
+
+.labelImage:hover .sendImage {
+  opacity: 1;
+}

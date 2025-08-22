@@ -1,0 +1,18 @@
+.input {
+  resize: none;
+  display: block;
+  border-radius: var(--border-radius);
+  padding: 0.5rem 1rem;
+  border: 0.1rem solid transparent;
+  color: var(--color-background-primary);
+  transition: var(--transition);
+  background-color: var(--color-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.input:focus,
+.input:hover {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 5px var(--color-accent);
+}

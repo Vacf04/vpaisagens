@@ -1,9 +1,11 @@
-import LoginForm from "@/components/login/loginForm";
+import LoginForm from "@/components/login/LoginForm";
 
 export default function LoginPage() {
   return (
     <section>
-      <LoginForm />
+      <div className="container">
+        <LoginForm />
+      </div>
     </section>
   );
 }
